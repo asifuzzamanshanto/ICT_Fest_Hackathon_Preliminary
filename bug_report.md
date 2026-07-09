@@ -2,17 +2,6 @@
 
 This report summarizes the proven specification, security, and concurrency defects found during the audit against the official hackathon PDF. All fixes preserve the documented API contract and are covered by focused regression or black-box tests.
 
-## Audit Verification
-
-The following verification was completed during the audit before temporary stress-test files were removed from the final submission tree:
-
-- `python3 -m compileall app tests` passed.
-- `python3 -m pytest -q -s tests/test_audit_full.py` passed: 53 tests.
-- `python3 -m pytest -q -s tests/test_regressions.py::test_cross_process_same_slot_create_cannot_double_book` passed.
-- `python3 -m pytest -q -s tests/test_audit_full.py tests/test_regressions.py::test_cross_process_same_slot_create_cannot_double_book` passed: 54 tests.
-- `python3 -m pytest -q -s` passed.
-- Full pytest suite was repeated 10 times; every run passed with 69 tests.
-
 ## 1. Datetime Normalization
 
 - Files: `app/timeutils.py`
