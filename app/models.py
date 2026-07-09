@@ -67,3 +67,11 @@ class RefundLog(Base):
     amount_cents = Column(Integer, nullable=False)
     status = Column(String, nullable=False)
     processed_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+
+class TokenState(Base):
+    __tablename__ = "token_states"
+
+    jti = Column(String, primary_key=True)
+    token_type = Column(String, nullable=False, index=True)
+    expires_at = Column(DateTime, nullable=False)

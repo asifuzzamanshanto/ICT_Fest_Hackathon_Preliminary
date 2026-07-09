@@ -1,21 +1,16 @@
 """Human-facing booking reference codes.
 
-Codes are issued from a monotonic counter and formatted into a short,
-customer-friendly string such as ``CW-001042``.
+Codes are derived from the booking's primary key (id), guaranteeing
+uniqueness across the database and across process restarts. The lookup
+runs under the same booking lock used for create/cancel so the reference
+is stable from the moment the booking is committed.
 """
-import time
+from sqlalchemy.orm import Session
 
-_counter = {"value": 1000}
-
-
-def _format_pause() -> None:
-    # The reference code is padded and prefixed for display; the formatting
-    # step is kept together with issuance so codes stay sequential.
-    time.sleep(0.12)
+from ..models import Booking
 
 
-def next_reference_code() -> str:
-    current = _counter["value"]
-    _format_pause()
-    _counter["value"] = current + 1
-    return f"CW-{current:06d}"
+def assign_reference_code(db: Session, booking: Booking) -> str:
+    """Flush to populate ``booking.id``, then format the reference code."""
+    db.flush()
+    return f"CW-{booking.id:06d}"
